@@ -1,0 +1,40 @@
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/adityaghaywat-cmd/First-Docker.git'
+            }
+        }
+
+        stage('DockerImage') {
+            steps {
+                sh "docker build -t first-docker:v1 ."
+            }
+        }
+        
+         stage('Dockerpush') {
+            steps {
+                
+		withDockerRegistry(credentialsId: 'dockerhub',url:"") {
+
+                sh '''
+                docker tag first-docker:v1 adityaghaywat/first-docker:v1
+                docker push adityaghaywat/first-docker:v1
+                '''
+		}                
+            }
+        }
+        
+        stage('Container') {
+            steps {
+                sh "docker run -itd --name first-docker-v1 -p 1001:80 first-docker:v1"
+            }
+        }
+
+    }
+}
+
+
