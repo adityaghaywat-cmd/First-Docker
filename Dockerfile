@@ -1,2 +1,2 @@
-FROM dhi.io/nginx:<tag>
+FROM nginx
 COPY index.html /usr/share/nginx/html
